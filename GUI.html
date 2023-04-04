@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  google.charts.load('current', {packages: ['treemap']});
+</script>
+</head>
+
+<body>
+
+  <br/>
+  <div id="throbber" style="display:none"><img src="https://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif">
+    <br/>Loading drive data
+    <br/>This can take a while.
+  </div>
+  <div id="resultsDiv" style="display:none";>
+  <div id=totalFileCountDiv></div>
+  <br/>
+   Left click to descend into a directory, right click to ascend<br/>
+   <div id="chartDiv"></div>
+  </div>
+
+  <button id="start" type="button" onclick="setThrobber(true); google.script.run.withSuccessHandler(onSuccess).start();">Refresh Drive Data</button>
+  <?!= include('JS'); ?>
+</body>
+
+</html>
