@@ -1,0 +1,59 @@
+<script>
+//------------------------------------------------
+function onSuccess(dataFromGDrive) {
+   setThrobber(false);
+   google.charts.load('current', {
+      'packages': ['treemap']
+   });
+  drawChart(dataFromGDrive);
+   meterDiv = document.getElementById("totalFileCountDiv");
+   meterDiv.innerHTML = `Total file count ${dataFromGDrive.totalFileCount.toLocaleString()} <meter max="5000000" min="0" value="${dataFromGDrive.totalFileCount}"></meter>`;
+}
+//------------------------------------------------
+function setThrobber(val) {
+   let throbberDiv = document.getElementById("throbber");
+   let startButton = document.getElementById("start");
+   let resultsDiv = document.getElementById("resultsDiv");
+   if (val) {
+      throbberDiv.style.display = "block";
+      startButton.disabled = true;
+      resultsDiv.style.display = "none";
+   } else {
+      throbberDiv.style.display = "none";
+      resultsDiv.style.display = "block";
+      startButton.disabled = false;
+   }
+}
+//------------------------------------------------
+function drawChart(dataFromGDrive) {
+   var data = google.visualization.arrayToDataTable(dataFromGDrive.chartData);
+   tree = new google.visualization.TreeMap(document.getElementById('chartDiv'));
+
+   tree.draw(data, {
+      minColor: '#f00',
+      midColor: '#ddd',
+      maxColor: '#0d0',
+      headerHeight: 15,
+      fontColor: 'black',
+      maxDepth: 5,
+      width: 1024,
+      height: 768,
+      generateTooltip: showFullTooltip
+   });
+}
+//------------------------------------------------
+function showFullTooltip(row, size, value) {
+    return `<div style="background:#fd9; padding:10px; border-style:solid">${getReadableFileSizeString(size)}</div>`;
+  }
+  //------------------------------------------------
+function getReadableFileSizeString(fileSizeInBytes) {
+   var i = -1;
+   var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+   do {
+      fileSizeInBytes /= 1024;
+      i++;
+   } while (fileSizeInBytes > 1024);
+
+   return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
+}
+</script>
